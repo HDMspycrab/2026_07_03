@@ -25,12 +25,12 @@ def train_and_save_model(n_estimators=100, max_depth=None, test_size=0.2, random
     # 4. 計算準確度
     accuracy = float(model.score(X_test, y_test))
     
-    # 5. 包裝成 app.py 要求的特定字典格式
+       # 5. 包裝成 app.py 要求的特定字典格式
     model_data = {
         "model": model,
         "target_names": [str(name) for name in iris.target_names],
         "feature_names": [str(name) for name in iris.feature_names],
-        "feature_importances": model.feature_importances_.tolist(),
+        "feature_importances": dict(zip(iris.feature_names, model.feature_importances_)), # 改成這行
         "accuracy": accuracy,
         "train_time": train_time,
         "n_estimators": n_estimators,
@@ -38,6 +38,7 @@ def train_and_save_model(n_estimators=100, max_depth=None, test_size=0.2, random
         "test_size": test_size,
         "random_state": random_state
     }
+
     
     # 6. 儲存模型檔案
     joblib.dump(model_data, model_path)
@@ -47,7 +48,8 @@ def train_and_save_model(n_estimators=100, max_depth=None, test_size=0.2, random
         "status": "success",
         "accuracy": accuracy,
         "train_time": train_time,
-        "feature_importances": dict(zip(iris.feature_names, model.feature_importances_)),
+                "feature_importances": dict(zip(iris.feature_names, model.feature_importances_)),
+
         "message": f"模型訓練成功！準確度達 {accuracy:.4f}"
     }
 
